@@ -8,7 +8,7 @@
 import csv
 import numpy as np
 
-def ratings(src_filename='data/ratings.txt', delimiter='%', header=False, quoting=csv.QUOTE_MINIMAL):
+def ratings(src_filename='ratings.txt', delimiter='%', header=False, quoting=csv.QUOTE_MINIMAL):
 	title_list = titles()
 	user_id_set = set()
 	with open(src_filename, 'r') as f:
@@ -26,7 +26,7 @@ def ratings(src_filename='data/ratings.txt', delimiter='%', header=False, quotin
 		mat[int(line[1])][int(line[0])] = float(line[2])
 	return title_list, mat
 
-def titles(src_filename='data/movies.txt', delimiter='%', header=False, quoting=csv.QUOTE_MINIMAL):
+def titles(src_filename='movies.txt', delimiter='%', header=False, quoting=csv.QUOTE_MINIMAL):
 	reader = csv.reader(file(src_filename), delimiter=delimiter, quoting=quoting)
 	title_list = []
 	for line in reader:

@@ -91,7 +91,7 @@ class Chatbot:
       # The values stored in each row i and column j is the rating for
       # movie i by user j
       self.titles, self.ratings = ratings()
-      reader = csv.reader(open('data/sentiment.txt', 'rb'))
+      reader = csv.reader(open('sentiment.txt', 'rb'))
       self.sentiment = dict(reader)
 
 
