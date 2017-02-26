@@ -28,6 +28,7 @@ class Chatbot:
       self.name = 'moviebot'
       self.is_turbo = is_turbo
       self.read_data()
+      self.binarize()
 
     #############################################################################
     # 1. WARM UP REPL
@@ -119,16 +120,20 @@ class Chatbot:
 
     def binarize(self):
       """Modifies the ratings matrix to make all of the ratings binary"""
-
-      pass
-
+      binary_threshold = 2.5
+      for movie in xrange(0, len(self.ratings)):
+        for user in xrange(0, len(self.ratings[movie])):
+          rating = self.ratings[movie][user]
+          if rating > binary_threshold:
+            self.ratings[movie][user] = 1
+          elif rating > 0:
+            self.ratings[movie][user] = -1
 
     def distance(self, u, v):
       """Calculates a given distance function between vectors u and v"""
       # TODO: Implement the distance function between vectors u and v]
       # Note: you can also think of this as computing a similarity measure
-
-      pass
+      return numpy.dot(u,v)/(len(u)*len(v))
 
 
     def recommend(self, u):
