@@ -8,6 +8,10 @@
 ######################################################################
 import csv
 import math
+import sys
+import os
+import re
+import pprint
 
 import numpy as np
 
@@ -35,7 +39,7 @@ class Chatbot:
       # TODO: Write a short greeting message                                      #
       #############################################################################
 
-      greeting_message = 'How can I help you?'
+      greeting_message = 'Hi, my name is "Arnold: The Movie Chatinator." I have seen 9125 movies till date! My friends say I am really good at giving movie recommendations. Maybe I could help you?'
 
       #############################################################################
       #                             END OF YOUR CODE                              #
@@ -49,13 +53,14 @@ class Chatbot:
       # TODO: Write a short farewell message                                      #
       #############################################################################
 
-      goodbye_message = 'Have a nice day!'
+      goodbye_message = 'I hope you enjoy watching the movie! Remember to grab some popcorn buddy! Have a nice day!'
 
       #############################################################################
       #                             END OF YOUR CODE                              #
       #############################################################################
 
       return goodbye_message
+
 
 
     #############################################################################
@@ -73,10 +78,27 @@ class Chatbot:
       # calling other functions. Although modular code is not graded, it is       #
       # highly recommended                                                        #
       #############################################################################
+      movies_file = "movies.txt"
       if self.is_turbo == True:
         response = 'processed %s in creative mode!!' % input
       else:
+
+        titles = [x[0] for x in self.titles]
+
         response = 'processed %s in starter mode' % input
+
+        regex1 = '\"(.*?)\"'
+        matches = re.findall(regex1,input)
+        if len(matches)<1:
+          response = 'Sorry, I dont understand what you are trying to say. Tell me about a movie you have seen.'
+        elif len(matches)>1:
+          response = 'Please tell me about one movie at a time. Go ahead.'
+        else: 
+          match = matches[0] 
+          if match not in titles:
+            response = "Sorry I haven't seen that movie before"
+
+  
 
       return response
 

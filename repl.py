@@ -1,4 +1,4 @@
-.txtusr/bin/env python
+# .txtusr/bin/env python
 # -*- coding: utf-8 -*-
 
 # PA6, CS124, Stanford, Winter 2016
