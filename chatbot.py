@@ -106,14 +106,8 @@ class Chatbot:
           if match or match1 or match2 or match3 in titles:
             exists = True 
 
-          # else: 
-          #   match = "The " + match
-          #   if match in titles:
-          #     exists = True
           for title in titles:
             pattern = re.compile('^(?:The |An |A )?' + match + '(?: \([0-9][0-9][0-9][0-9]\))?$')
-            # pattern1 = re.compile('^(?:The |An |A )?' + match + '$')
-            # pattern2 = re.compile('^' + match + '$')
             if pattern.match(title):
               exists = True
               break
