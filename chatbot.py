@@ -85,6 +85,7 @@ class Chatbot:
       else:
 
         titles = [x[0] for x in self.titles]
+        print titles
 
         response = 'processed %s in starter mode' % input
 
@@ -95,9 +96,31 @@ class Chatbot:
         elif len(matches)>1:
           response = 'Please tell me about one movie at a time. Go ahead.'
         else: 
-          match = matches[0] 
-          if match not in titles:
+          exists = False
+
+          match = matches[0]
+          match1 = "The " + match
+          match2 = "A " + match
+          match3 = "An " + match
+
+          if match or match1 or match2 or match3 in titles:
+            exists = True 
+
+          # else: 
+          #   match = "The " + match
+          #   if match in titles:
+          #     exists = True
+          for title in titles:
+            pattern = re.compile('^(?:The |An |A )?' + match + '(?: \([0-9][0-9][0-9][0-9]\))?$')
+            # pattern1 = re.compile('^(?:The |An |A )?' + match + '$')
+            # pattern2 = re.compile('^' + match + '$')
+            if pattern.match(title):
+              exists = True
+              break
+
+          if not exists:
             response = "Sorry I haven't seen that movie before"
+       
 
   
 
@@ -128,6 +151,8 @@ class Chatbot:
             self.ratings[movie][user] = 1
           elif rating > 0:
             self.ratings[movie][user] = -1
+          else:
+            self.ratings[movie][user] = 0
 
     def distance(self, u, v):
       """Calculates a given distance function between vectors u and v"""
