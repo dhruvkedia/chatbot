@@ -90,14 +90,27 @@ class Chatbot:
 
         regex1 = '\"(.*?)\"'
         matches = re.findall(regex1,input)
-        if len(matches)<1:
+        if len(matches) < 1:
           response = 'Sorry, I dont understand what you are trying to say. Tell me about a movie you have seen.'
-        elif len(matches)>1:
+        elif len(matches) > 1:
           response = 'Please tell me about one movie at a time. Go ahead.'
         else: 
           match = matches[0] 
           if match not in titles:
             response = "Sorry I haven't seen that movie before"
+          else:
+            sentence = re.findall(r"[\w']+|[.,!?;]", input.replace(match, ""))
+            sentiment = 0
+            negation = False
+#            for i in xrange(0,len(sentence)):
+#              word = words[i]
+#              if negation:
+#                if word in [".", ",", ";", "?", "!"]:
+#                  negation = False
+#                else:
+#                  sentiment += -1*self.sentiment[word]
+#              if word in ["not", "neither", "nor","never"]:
+#                negation = True
 
   
 
