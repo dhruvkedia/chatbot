@@ -85,7 +85,6 @@ class Chatbot:
       else:
 
         titles = [x[0] for x in self.titles]
-        print titles
 
         response = 'processed %s in starter mode' % input
 
@@ -116,15 +115,18 @@ class Chatbot:
             sentence = re.findall(r"[\w']+|[.,!?;]", input.replace(match, ""))
             sentiment = 0
             negation = False
-            
+            print sentence
             for i in xrange(0,len(sentence)):
-              word = words[i]
+              word = sentence[i]
               
               wordSentiment = 0
-              if self.sentiment[word] == 'pos':
-                wordSentiment = 1
+              if word in self.sentiment:
+                if self.sentiment[word] == 'pos':
+                  wordSentiment = 1
+                else:
+                  wordSentimet = -1
               else:
-                wordSentiment = -1
+                wordSentiment = 0
               
               if negation:
                 if word in [".", ",", ";", "?", "!"]:
@@ -135,6 +137,8 @@ class Chatbot:
                 negation = True
               
               sentiment += wordSentiment
+            
+            print sentiment
                 
       return response
 
