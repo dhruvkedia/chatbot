@@ -91,9 +91,9 @@ class Chatbot:
 
         regex1 = '\"(.*?)\"'
         matches = re.findall(regex1,input)
-        if len(matches)<1:
+        if len(matches) < 1:
           response = 'Sorry, I dont understand what you are trying to say. Tell me about a movie you have seen.'
-        elif len(matches)>1:
+        elif len(matches) > 1:
           response = 'Please tell me about one movie at a time. Go ahead.'
         else: 
           exists = False
@@ -102,10 +102,8 @@ class Chatbot:
           match1 = "The " + match
           match2 = "A " + match
           match3 = "An " + match
-
           if match or match1 or match2 or match3 in titles:
             exists = True 
-
           for title in titles:
             pattern = re.compile('^(?:The |An |A )?' + match + '(?: \([0-9][0-9][0-9][0-9]\))?$')
             if pattern.match(title):
@@ -114,10 +112,26 @@ class Chatbot:
 
           if not exists:
             response = "Sorry I haven't seen that movie before"
-       
-
-  
-
+          else:
+            sentence = re.findall(r"[\w']+|[.,!?;]", input.replace(match, ""))
+            sentiment = 0
+            negation = False
+            wordSentiment = 0
+            if self.sentiment[word] == 'pos':
+              wordSentiment = 1
+            else:
+              wordSentiment = -1
+            for i in xrange(0,len(sentence)):
+              word = words[i]
+              if negation:
+                if word in [".", ",", ";", "?", "!"]:
+                  negation = False
+                else:
+                  wordSentiment = -1*wordSentiment
+              if word in ["not", "neither", "nor","never"]:
+                negation = True
+              sentiment += wordSentiment
+                
       return response
 
 
