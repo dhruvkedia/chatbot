@@ -116,13 +116,16 @@ class Chatbot:
             sentence = re.findall(r"[\w']+|[.,!?;]", input.replace(match, ""))
             sentiment = 0
             negation = False
-            wordSentiment = 0
-            if self.sentiment[word] == 'pos':
-              wordSentiment = 1
-            else:
-              wordSentiment = -1
+            
             for i in xrange(0,len(sentence)):
               word = words[i]
+              
+              wordSentiment = 0
+              if self.sentiment[word] == 'pos':
+                wordSentiment = 1
+              else:
+                wordSentiment = -1
+              
               if negation:
                 if word in [".", ",", ";", "?", "!"]:
                   negation = False
@@ -130,6 +133,7 @@ class Chatbot:
                   wordSentiment = -1*wordSentiment
               if word in ["not", "neither", "nor","never"]:
                 negation = True
+              
               sentiment += wordSentiment
                 
       return response
