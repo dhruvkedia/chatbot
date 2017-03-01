@@ -86,10 +86,6 @@ class Chatbot:
       else:
 
         titles = [x[0] for x in self.titles]
-<<<<<<< HEAD
-        # print titles
-=======
->>>>>>> 13f258c5fcbcc64936f18e8a0b6c47c2791c97d6
 
         response = 'processed %s in starter mode' % input
 
@@ -162,10 +158,7 @@ class Chatbot:
                 negation = True
               
               sentiment += wordSentiment
-<<<<<<< HEAD
-=======
-            
->>>>>>> 13f258c5fcbcc64936f18e8a0b6c47c2791c97d6
+
             print sentiment
                 
       return response
