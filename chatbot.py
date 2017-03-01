@@ -98,9 +98,22 @@ class Chatbot:
         regex1 = '\"(.*?)\"'
         matches = re.findall(regex1,input)
         if len(matches) < 1:
-          response = 'Sorry, I dont understand what you are trying to say. Tell me about a movie you have seen.'
+          random_responses1 = []
+          random_responses1.append('Sorry, I dont understand what you are trying to say. Tell me about a movie you have seen.')
+          random_responses1.append('Sorry, I dont think that is a movie. Could you give me a new movie?')
+          random_responses1.append('Sorry, I dont understand the movie name. Please give me another one')
+          # random.choice(random_responses1)
+          index = randint(0,2)
+          response = random_responses1[index]
+
         elif len(matches) > 1:
-          response = 'Please tell me about one movie at a time. Go ahead.'
+          random_responses2 = []
+          random_responses2.append('Please tell me about one movie at a time. Go ahead.')
+          random_responses2.append('Slow down. Give me a movie one at a time.')
+          random_responses2.append('Hold up, I can only understand one movie at a time.')
+          index = randint(0,2)
+          response = random_responses2[index]
+
         else: 
           exists = False
 
@@ -114,11 +127,18 @@ class Chatbot:
           for title in titles:
             pattern = re.compile('^(?:The |An |A )?' + match + '(?: \([0-9][0-9][0-9][0-9]\))?$')
             if pattern.match(title):
+              print "Hello"
               exists = True
               break
 
           if not exists:
-            response = "Sorry I haven't seen that movie before"
+            random_responses3 = []
+            random_responses3.append('Sorry I havent seen that movie before. Could you give me another movie?')
+            random_responses3.append('Oops, I havent seen that myself. Guess I have something to do this weekend. Could you tell me about another movie?')
+            random_responses3.append('I havent heard of that movie before. Could you tell me about another movie?')
+            index = randint(0,2)
+            response = random_responses3[index]
+            
           else:
             sentence = re.findall(r"[\w']+|[.,!?;]", input.replace(match, ""))
             binarySentiment = self.calculateSentiment(sentence)
@@ -128,7 +148,7 @@ class Chatbot:
               response = "So %s isn't the best movie, huh? What's another movie you've seen?" % match
             else:
               response = "Aha, you watched %s. I'm not sure if you liked it or not?" % match
-            
+          
                 
       return response
 
