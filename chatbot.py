@@ -158,7 +158,6 @@ class Chatbot:
                 negation = True
               
               sentiment += wordSentiment
-
             print sentiment
                 
       return response
