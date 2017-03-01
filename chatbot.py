@@ -17,6 +17,7 @@ import numpy as np
 
 from movielens import ratings
 from random import randint
+from PorterStemmer import PorterStemmer
 
 class Chatbot:
     """Simple class to implement the chatbot for PA 6."""
@@ -27,8 +28,10 @@ class Chatbot:
     def __init__(self, is_turbo=False):
       self.name = 'moviebot'
       self.is_turbo = is_turbo
+      self.p = PorterStemmer()
       self.read_data()
       self.binarize()
+      self.userTaste = []
 
     #############################################################################
     # 1. WARM UP REPL
@@ -85,9 +88,13 @@ class Chatbot:
       else:
 
         titles = [x[0] for x in self.titles]
-
-        response = 'processed %s in starter mode' % input
-
+        
+        
+        if len(self.userTaste) > 5:
+          response = "I think you'll like "+ self.recommend(self.userTaste)
+          return response
+        
+        #Otherwise, ask for more movies
         regex1 = '\"(.*?)\"'
         matches = re.findall(regex1,input)
         if len(matches) < 1:
@@ -97,6 +104,7 @@ class Chatbot:
         else: 
           exists = False
 
+          #find movie name in input
           match = matches[0]
           match1 = "The " + match
           match2 = "A " + match
@@ -113,32 +121,14 @@ class Chatbot:
             response = "Sorry I haven't seen that movie before"
           else:
             sentence = re.findall(r"[\w']+|[.,!?;]", input.replace(match, ""))
-            sentiment = 0
-            negation = False
-            print sentence
-            for i in xrange(0,len(sentence)):
-              word = sentence[i]
-              
-              wordSentiment = 0
-              if word in self.sentiment:
-                if self.sentiment[word] == 'pos':
-                  wordSentiment = 1
-                else:
-                  wordSentimet = -1
-              else:
-                wordSentiment = 0
-              
-              if negation:
-                if word in [".", ",", ";", "?", "!"]:
-                  negation = False
-                else:
-                  wordSentiment = -1*wordSentiment
-              if word in ["not", "neither", "nor","never"]:
-                negation = True
-              
-              sentiment += wordSentiment
+            binarySentiment = self.calculateSentiment(sentence)
+            if binarySentiment > 0:
+              response = "You liked %s! What's another movie you've seen?" % match
+            elif binarySentiment < 0:
+              response = "So %s isn't the best movie, huh? What's another movie you've seen?" % match
+            else:
+              response = "Aha, you watched %s. I'm not sure if you liked it or not?" % match
             
-            print sentiment
                 
       return response
 
@@ -154,13 +144,16 @@ class Chatbot:
       # movie i by user j
       self.titles, self.ratings = ratings()
       reader = csv.reader(open('sentiment.txt', 'rb'))
-      self.sentiment = dict(reader)
+      self.sentiment = {}
+      for row in reader:
+        self.sentiment[self.p.stem(row[0])] = row[1]
 
 
     def binarize(self):
       """Modifies the ratings matrix to make all of the ratings binary"""
       binary_threshold = 2.5
-      for movie in xrange(0, len(self.ratings)):
+      
+      """"for movie in xrange(0, len(self.ratings)):
         for user in xrange(0, len(self.ratings[movie])):
           rating = self.ratings[movie][user]
           if rating > binary_threshold:
@@ -168,7 +161,7 @@ class Chatbot:
           elif rating > 0:
             self.ratings[movie][user] = -1
           else:
-            self.ratings[movie][user] = 0
+            self.ratings[movie][user] = 0""""
 
     def distance(self, u, v):
       """Calculates a given distance function between vectors u and v"""
@@ -184,6 +177,37 @@ class Chatbot:
       # and outputs a list of movies recommended by the chatbot
 
       pass
+    
+    def calculateSentiment(self, sentence):
+      sentiment = 0
+      negation = False
+      sentence = [self.p.stem(x) for x in sentence]
+      
+      for i in xrange(0,len(sentence)):
+        word = sentence[i]
+        wordSentiment = 0
+        if word in self.sentiment:
+          if self.sentiment[word] == 'pos':
+            wordSentiment = 1
+          else:
+            wordSentiment = -1
+        else:
+          wordSentiment = 0
+        if negation:
+          if word in [".", ",", ";", "?", "!"]:
+            negation = False
+          else:
+            wordSentiment = -1*wordSentiment
+        if (word in ["not", "neither", "nor","never"]) or ("n't" in word):
+          negation = True
+        sentiment += wordSentiment
+        
+      if sentiment > 0:
+        return 1
+      elif sentiment < 0:
+        return -1
+      else:
+        return 0
 
 
     #############################################################################
